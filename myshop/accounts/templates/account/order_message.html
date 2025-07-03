@@ -1,0 +1,25 @@
+Hey {{ name }},
+
+Thank you for your order. We have received your purchase and will get back to you as soon as possible regarding delivery updates.
+
+Here are your order details:
+{% for product in product_list %}
+Product: {{ product.name }}
+Quantity: {{ product.quantity }}
+Total: {{ product.total }}
+
+{% endfor %}
+
+Delivery Address:
+{{ address }}
+
+Phone:
+{{ phone }}
+
+If your inquiry is urgent, please feel free to call us at 9846811809.
+You can also check our projects on GitHub: https://github.com/SujaanMijar
+Visit our website: https://sujankomomo.pythonanywhere.com/
+
+Thanks,
+Date: {{ date }}
+The Sujan Mijar Team.

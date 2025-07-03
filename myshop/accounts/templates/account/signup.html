@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css" />
+</head>
+
+<body>
+    <div class="signup-section">
+        <div class="signup-card">
+            <h2>Sign Up</h2>
+            <form method="POST" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" name="firstname" placeholder="First Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" name="lastname" placeholder="Last Name" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+                <p>Already have an account? <a href="{% url 'log_in' %}">Login here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+    {% if messages %}
+    {% for message in messages %}
+    <script>
+        alertify.set('notifier', 'position', 'top-right');
+        alertify.success('{{ message }}');
+    </script>
+    {% endfor %}
+    {% endif %}
+</body>
+
+</html>

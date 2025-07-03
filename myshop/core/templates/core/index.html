@@ -1,0 +1,890 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* === General Container & Typography === */
+section > .container {
+  margin-top: 30px;
+  margin-bottom: 50px;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+/* === Sidebar Container === */
+.left-sidebar {
+  background: linear-gradient(145deg, #f0f2f5, #d9e2ec);
+  padding: 25px 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.5s ease, transform 0.3s ease;
+}
+
+.left-sidebar:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+/* === Sidebar Headings === */
+.left-sidebar h2 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  color: #111;
+  position: relative;
+  padding-bottom: 8px;
+  letter-spacing: 1.2px;
+}
+
+/* Underline with smooth gradient animation */
+.left-sidebar h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6e7f, #bfe9ff);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.left-sidebar h2:hover::after {
+  width: 100%;
+}
+
+/* === Accordion Panel Styling === */
+.category-products .panel {
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: box-shadow 0.4s ease;
+  background: white;
+}
+
+.category-products .panel:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.category-products .panel-heading {
+  background: transparent;
+  padding: 0;
+  border-bottom: none;
+}
+
+.category-products .panel-title a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  background: #f7f9fc;
+  box-shadow: inset 0 0 8px rgba(255,110,127,0.15);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.category-products .panel-title a:hover,
+.category-products .panel-title a.accordion-button:not(.collapsed) {
+  background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255,110,127,0.7);
+}
+
+/* Plus icon rotates with smooth ease */
+.category-products .panel-title a .fa-plus {
+  color: #ff6e7f;
+  font-size: 1.3rem;
+  transition: transform 0.4s ease, color 0.4s ease;
+}
+
+.category-products .panel-title a.accordion-button:not(.collapsed) .fa-plus {
+  transform: rotate(45deg);
+  color: #fff;
+}
+
+/* Panel collapse - smooth height + fade */
+.category-products .panel-collapse.collapse {
+  transition: max-height 0.45s ease, opacity 0.35s ease;
+  overflow: hidden;
+}
+
+.category-products .panel-collapse.show {
+  opacity: 1;
+}
+
+.category-products .panel-collapse:not(.show) {
+  opacity: 0;
+}
+
+/* Subcategory list style */
+.category-products ul.list-unstyled {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.category-products ul.list-unstyled li a {
+  color: #555;
+  font-size: 1rem;
+  padding: 8px 0;
+  display: block;
+  border-left: 3px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease, padding-left 0.3s ease;
+  font-weight: 500;
+}
+
+.category-products ul.list-unstyled li a:hover {
+  color: #ff6e7f;
+  border-left: 3px solid #ff6e7f;
+  padding-left: 12px;
+}
+
+/* === Brands Section === */
+.brands_products h2 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin: 30px 0 20px;
+  color: #0d6efd;
+  position: relative;
+  letter-spacing: 1.1px;
+}
+
+.brands_products h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 4px;
+  background: linear-gradient(90deg, #0d6efd, #1e90ff);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.brands_products h2:hover::after {
+  width: 100%;
+}
+
+.brands-name ul li a {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 12px;
+  color: #333;
+  text-decoration: none;
+  background: #e8f0fe;
+  margin-bottom: 8px;
+  box-shadow: inset 0 0 8px rgba(30, 144, 255, 0.12);
+  transition: all 0.3s ease;
+}
+
+.brands-name ul li a:hover {
+  background: linear-gradient(45deg, #1e90ff, #0d6efd);
+  color: white;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.5);
+  transform: translateX(8px) scale(1.03);
+}
+
+.brands-name ul li a span {
+  font-weight: 700;
+  color: #ffd54f;
+}
+/* price range */
+.price-filter {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+}
+
+.price-filter h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.price-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.price-inputs input {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-btn {
+    background-color: #198754;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+    background-color: #157347;
+}
+
+
+/* === Shipping Image === */
+.shipping img {
+  max-width: 50%;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(25, 135, 84, 0.3);
+  transition: transform 0.5s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.shipping img:hover {
+  transform: scale(1.07);
+  box-shadow: 0 15px 45px rgba(25, 135, 84, 0.6);
+}
+
+/* === Product Cards === */
+.features_items .container-fluid {
+  padding: 0;
+}
+
+.hp {
+  margin-bottom: 35px;
+}
+
+.card {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+  background: linear-gradient(145deg, #ffffff, #f7faff);
+  cursor: pointer;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+  transform: translateY(-10px);
+}
+
+.card-img-top {
+  border-radius: 20px 20px 0 0;
+  max-height: 220px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.1);
+}
+
+/* Label Top */
+.label-top {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  padding: 6px 14px;
+  background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
+  border-radius: 15px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: background 0.4s ease;
+  z-index: 10;
+}
+
+.card:hover .label-top {
+  background: linear-gradient(45deg, #bfe9ff, #ff6e7f);
+}
+
+/* Card Body */
+.card-body {
+  padding: 20px 25px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.card-body .badge {
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 25px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  user-select: none;
+}
+
+.card-body .badge.bg-danger {
+  background: #ff6e7f;
+  color: white;
+  box-shadow: 0 4px 10px rgba(255, 110, 127, 0.6);
+}
+
+.card-body .badge.bg-success {
+  background: #4bbf73;
+  color: white;
+  box-shadow: 0 4px 10px rgba(75, 191, 115, 0.6);
+}
+
+/* Card Title */
+.card-title a {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #111;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.card-title a:hover {
+  color: #ff6e7f;
+  text-shadow: 0 0 8px rgba(255, 110, 127, 0.7);
+}
+
+/* Buttons */
+.btn-warning.bold-btn {
+  background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
+  border: none;
+  border-radius: 30px;
+  padding: 12px 0;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: white;
+  box-shadow: 0 6px 15px rgba(255, 110, 127, 0.6);
+  transition: background 0.4s ease, transform 0.3s ease, box-shadow 0.4s ease;
+}
+
+.btn-warning.bold-btn:hover {
+  background: linear-gradient(45deg, #bfe9ff, #ff6e7f);
+  box-shadow: 0 10px 30px rgba(191, 233, 255, 0.7);
+  transform: scale(1.1);
+}
+
+/* Icons (question circle, heart) */
+.card-body .fas.fa-question-circle,
+.card-body .far.fa-heart {
+  font-size: 1.3rem;
+  color: #bbb;
+  transition: color 0.4s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.card-body .fas.fa-question-circle:hover,
+.card-body .far.fa-heart:hover {
+  color: #ff6e7f;
+  transform: scale(1.4);
+  filter: drop-shadow(0 0 4px rgba(255,110,127,0.6));
+}
+
+/* Pagination Styling */
+.pagination {
+  margin-top: 40px;
+}
+
+.pagination .page-item .page-link {
+  color: #ff6e7f;
+  background: #fff;
+  font-weight: 700;
+  border-radius: 50% !important;
+  width: 42px;
+  height: 42px;
+  text-align: center;
+  padding: 10px 0;
+  transition: background 0.35s ease, color 0.35s ease, transform 0.3s ease;
+  box-shadow: 0 3px 7px rgba(255, 110, 127, 0.3);
+  user-select: none;
+}
+
+.pagination .page-item .page-link:hover {
+  background: #ff6e7f;
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 10px 30px rgba(255, 110, 127, 0.6);
+}
+
+.pagination .active_page {
+  background: #ff6e7f !important;
+  color: white !important;
+  box-shadow: 0 12px 36px rgba(255, 110, 127, 0.9) !important;
+  transform: scale(1.2);
+  font-weight: 900;
+}
+
+/* === Tabs Styling === */
+.category-tab .nav-tabs .nav-link {
+  font-weight: 700;
+  color: #444;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  padding: 12px 25px;
+  margin-right: 5px;
+  background: #f0f4f8;
+  transition: background 0.4s ease, color 0.4s ease, transform 0.3s ease;
+  user-select: none;
+}
+
+.category-tab .nav-tabs .nav-link:hover {
+  background: #ff6e7f;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(255, 110, 127, 0.45);
+}
+
+.category-tab .nav-tabs .nav-link.active {
+  background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
+  color: white;
+  box-shadow: 0 12px 40px rgba(191, 233, 255, 0.8);
+  transform: scale(1.15);
+}
+
+/* === Recommended Items Carousel === */
+.recommended_items .carousel-inner .product-image-wrapper {
+  padding: 12px;
+}
+
+.recommended_items .productinfo {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(191, 233, 255, 0.4);
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.recommended_items .productinfo:hover {
+  box-shadow: 0 15px 45px rgba(255, 110, 127, 0.6);
+  transform: translateY(-8px);
+}
+
+.recommended_items .btn-default.add-to-cart {
+  background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
+  border: none;
+  color: white;
+  border-radius: 30px;
+  padding: 10px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 8px 25px rgba(255, 110, 127, 0.65);
+  transition: background 0.4s ease, transform 0.3s ease;
+  user-select: none;
+}
+
+.recommended_items .btn-default.add-to-cart:hover {
+  background: linear-gradient(45deg, #bfe9ff, #ff6e7f);
+  transform: scale(1.15);
+  box-shadow: 0 12px 40px rgba(191, 233, 255, 0.85);
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 992px) {
+  .left-sidebar {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-img-top {
+    max-height: 180px;
+  }
+  .btn-warning.bold-btn {
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+}
+
+</style>
+<section id="slider"><!--slider-->
+    <div class="container">
+        <div class="row">
+              <h2 class="title text-center">offerproduct Items</h2>
+            <div class="col-sm-12">
+                <!-- Updated Bootstrap 5 carousel syntax -->
+                <div id="slider-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                    <ol class="carousel-indicators">
+                        {% for i in offer %}
+                        <button type="button" data-bs-target="#slider-carousel" data-bs-slide-to="{{forloop.counter0}}" class="{% if forloop.first %} active {% endif %}"></button>
+                        {% endfor %}
+                    </ol>
+
+                    <div class="carousel-inner">
+                        {% for i in offer %}
+                        <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                            <div class="row">
+                                <div class="col-sm-6 d-flex justify-content-center align-items-center flex-column">
+                                    <h1><span>MY</span>-SHOP</h1>
+                                    <h2>{{i.title}}</h2>
+                                    <p>{{i.desc}} </p>
+                                    <hr>
+                                    <p>Rs.{{i.price}} </p>
+                                    <button type="button" class="btn btn-default get">Get it now</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="{{i.image.url}}" class="img-fluid c_image" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!--/slider-->
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="left-sidebar" id="cate">
+                        <h2>Category</h2>
+                        <div class="panel-group category-products" id="accordian"><!--category-productsr-->
+                            {% for i in cate %}
+                              
+                           
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-parent="#accordian" href="#{{i.id}}">
+                                            <span class="badge float-end"><i class="fa fa-plus"></i></span>
+                                            {{i.title}}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{i.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="list-unstyled">
+                                            {% for i in i.subcategory_set.all %}
+                                              
+                                            
+                                            <li><a href="?category={{i.id}}#cate">{{i.title}} </a></li>
+                                            {% endfor %}
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                             {% endfor %}
+                            
+                            
+                        </div><!--/category-products-->
+                    
+                        <div class="brands_products"><!--brands_products-->
+                            <h2>Brands</h2>
+                            <div class="brands-name">
+                                <ul class="nav nav-pills flex-column">
+                                    {% for i in br %}
+                                      
+                                    <li class="nav-item"><a href="?category={{request.GET.category}}&brand={{i.id}}#cate" class="nav-link"> <span class="float-end">({{i.product_count}})</span>{{i.title}}</a></li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                        </div><!--/brands_products-->  
+                      <div class="shipping text-center"><!--shipping-->
+                            <img src="{% static 'images/ship.png' %}" alt="" class="img-fluid" />
+                        </div><!--/shipping-->
+                    
+                    </div>
+                </div>
+                
+                <div class="col-sm-9 padding-right">
+                    <div class="features_items"><!--features_items-->
+                        <h2 class="title text-center">Features Items</h2>
+                        <div class="container-fluid bg-trasparent my-4 p-3" style="position: relative">
+							<div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
+								{% for i in data %}
+                                  
+                                <div class="col hp">
+								<div class="card h-100 shadow-sm">
+									<a target="_blank" href="{% url 'product_detail' i.id %}">
+									<img src="{{i.image.url}}" class="card-img-top" alt="product.title" />
+                                </a>
+
+									<div class="label-top shadow-sm">
+									<a class="text-white" target="_blank" href="">{{i.name}}</a>
+									</div>
+									<div class="card-body">
+									<div class="clearfix mb-3">
+										<span class="float-start badge rounded-pill bg-danger"><del>{{i.mark_price}}</del></span>
+										<span class="float-start badge rounded-pill bg-success">Rs.{{i.price}}</span>
+
+										<span class="float-end"><a href="#" class="small text-muted text-uppercase aff-link">reviews</a></span>
+									</div>
+									<h5 class="card-title">
+										<a target="_blank" href="#">{{i.desc|safe}}</a>
+									</h5>
+
+									<div class="d-grid gap-2 my-4">
+
+										<a href="{% url 'cart_add' i.id %}" class="btn btn-warning bold-btn">add to cart</a>
+
+									</div>
+									<div class="clearfix mb-1">
+
+										<span class="float-start"><a href="#"><i class="fas fa-question-circle"></i></a></span>
+
+										<span class="float-end">
+										<i class="far fa-heart" style="cursor: pointer"></i>
+
+										</span>
+									</div>
+									</div>
+								</div>
+								</div>
+                              {% endfor %}
+
+								
+							</div>
+                        </div>
+                        <nav aria-label="Page navigation example" class="d-flex">
+                        <ul class="pagination d-flex ms-auto">
+                            {% if data.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{data.previous_page_number}}#cate">back</a></li>
+
+                            {% endif %}
+
+                            {% for n in num %}
+                              
+                            <li class="page-item"><a class="page-link {% if n == data.number %}
+                              active_page
+                            {% endif %}" href="?page={{n}}#cate">{{n}}</a></li>
+                            {% endfor %}
+
+ 
+                            {% if data.has_next %}
+                              <li class="page-item"><a class="page-link" href="?page={{data.next_page_number}}#cate">Next</a></li>
+
+                            {% endif %}
+                        </ul>
+                        </nav>
+
+                        
+                    </div><!--features_items-->
+                    
+                    <div class="category-tab"><!--category-tab-->
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a href="#tshirt" class="nav-link active" data-bs-toggle="tab">T-Shirt</a></li>
+                                <li class="nav-item"><a href="#blazers" class="nav-link" data-bs-toggle="tab">Blazers</a></li>
+                                <li class="nav-item"><a href="#sunglass" class="nav-link" data-bs-toggle="tab">Sunglass</a></li>
+                                <li class="nav-item"><a href="#kids" class="nav-link" data-bs-toggle="tab">Kids</a></li>
+                                <li class="nav-item"><a href="#poloshirt" class="nav-link" data-bs-toggle="tab">Polo shirt</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tshirt" >
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="../static/images/product-details/jacket.png" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="tab-pane fade" id="blazers" >
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="../static/images/product-details/jacket.png" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            
+                            <div class="tab-pane fade" id="sunglass" >
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="./static/images/home/gallery3.jpg" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="./static/images/home/gallery4.jpg" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="./static/images/home/gallery1.jpg" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <img src="./static/images/home/gallery2.jpg" alt="" class="img-fluid" />
+                                                <h2>$56</h2>
+                                                <p>Easy Polo Black Edition</p>
+                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                           
+                        </div>
+                    </div><!--/category-tab-->
+                    
+                    <div class="recommended_items"><!--recommended_items-->
+                        <h2 class="title text-center">recommended items</h2>
+                        
+                        <div id="recommended-item-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <!-- First slide -->
+                            <div class="carousel-item active">    
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/download_5.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 d-none d-sm-block">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/download_10.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 d-none d-md-block">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/download_8.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Second slide -->
+                            <div class="carousel-item">    
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-4">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/download_10.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 d-none d-sm-block">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/download_14.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-4 d-none d-md-block">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <img src="../static/images/product-details/jacket.png" alt="" class="img-fluid" />
+                                                    <h2>$56</h2>
+                                                    <p>Easy Polo Black Edition</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#recommended-item-carousel" data-bs-slide="prev">
+        <i class="fa fa-angle-left"></i>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#recommended-item-carousel" data-bs-slide="next">
+        <i class="fa fa-angle-right"></i>
+        <span class="visually-hidden">Next</span>
+    </button>            
+</div>
+                    </div><!--/recommended_items-->
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% endblock content %}

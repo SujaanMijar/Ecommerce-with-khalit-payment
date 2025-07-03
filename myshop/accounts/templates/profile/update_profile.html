@@ -1,0 +1,19 @@
+{% extends "profile_dashboard.html" %}
+{% load static %}
+{% block maincontent %}
+<h1 class="text-center fa-bold text-info">update profile form here</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-6 d-flex justify-content-center align-items-center">
+            <img src="{% static 'images/profile.jpg' %}" class="img-fluid" alt="">
+        </div>
+        <div class="col-6">
+            <form method="post" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" value="update profile">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock maincontent %}
