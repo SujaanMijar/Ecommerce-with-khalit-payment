@@ -10,7 +10,42 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from datetime import datetime
 from .models import Contact
+from recommend.utils import build_recommendations, get_recommendations
+
 # Create your views here.
+# def home(request):
+#     offer = offerproduct.objects.all()
+#     cate = Category.objects.all()
+#     br = Brands.objects.annotate(product_count=Count('product'))
+
+#     catid = request.GET.get('category')
+#     br_id = request.GET.get('brand')
+
+#     product = Product.objects.all()
+
+#     if catid and br_id:
+#         product = Product.objects.filter(subcategory=catid, brands=br_id)
+#     elif catid:
+#         product = Product.objects.filter(subcategory=catid)
+#     elif br_id:
+#         product = Product.objects.filter(brands=br_id)
+#     else:
+#         product = Product.objects.all()
+
+#     paginator = Paginator(product, 6)
+#     num_pages = request.GET.get('page')
+#     data = paginator.get_page(num_pages)
+#     total = data.paginator.num_pages
+
+#     context = {
+#         'offer': offer,
+#         'product': product,
+#         'cate': cate,
+#         'br': br,
+#         'data': data,
+#         'num': [i + 1 for i in range(total)]
+#     }
+#     return render(request, 'core/index.html', context)
 def home(request):
     offer = offerproduct.objects.all()
     cate = Category.objects.all()
@@ -30,6 +65,17 @@ def home(request):
     else:
         product = Product.objects.all()
 
+    # ---------------- ML Recommendation Logic ----------------
+    recommended_products = []
+    slides = []
+    if product.exists():
+        featured_product = product.latest('created_date')  # choose product for recommendations
+        df, cosine_sim = build_recommendations(product)
+        rec_ids = get_recommendations(featured_product.id, df, cosine_sim)
+        recommended_products = Product.objects.filter(id__in=rec_ids)
+        slides = [recommended_products[i:i+3] for i in range(0, len(recommended_products), 3)]
+    # ----------------------------------------------------------
+
     paginator = Paginator(product, 6)
     num_pages = request.GET.get('page')
     data = paginator.get_page(num_pages)
@@ -41,9 +87,11 @@ def home(request):
         'cate': cate,
         'br': br,
         'data': data,
-        'num': [i + 1 for i in range(total)]
+        'num': [i + 1 for i in range(total)],
+        'slides': slides,  # pass ML recommendations to template
     }
     return render(request, 'core/index.html', context)
+
 def product_detail(request,id):
     data=get_object_or_404(Product,id=id)
     return render(request,'core/product_detail.html',{'data':data})

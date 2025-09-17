@@ -69,9 +69,9 @@ def log_in(request):
             return redirect("log_in")
 
         user = authenticate(username=username, password=password)
-
         if user is not None:
             login(request, user)
+
             if remember_me:
                 request.session.set_expiry(1209600)  # 2 weeks
             else:

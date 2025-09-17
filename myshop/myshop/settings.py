@@ -51,6 +51,7 @@ EXTERNAL_APP = [
     'allauth.socialaccount.providers.google',
     'cart',
     'payments',
+    'recommend',
 ]
 INSTALLED_APPS.extend(EXTERNAL_APP)
 
